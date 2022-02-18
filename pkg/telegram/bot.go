@@ -12,13 +12,13 @@ type Bot struct {
 }
 
 type MessageComponents struct {
-	Waiting     string
-	ProductName string
-	Callories   string
+	waiting     string
+	productName string
+	callories   string
 }
 
-func NewMessageComponents(Waiting string, ProductName string, Callories string) *MessageComponents {
-	return &MessageComponents{Waiting: Waiting, ProductName: ProductName, Callories: Callories}
+func NewMessageComponents(waiting string, productName string, callories string) *MessageComponents {
+	return &MessageComponents{waiting: waiting, productName: productName, callories: callories}
 }
 
 func NewBot(bot *tgbotapi.BotAPI, mc *MessageComponents, db *db.Db) *Bot {
@@ -34,15 +34,16 @@ func (b *Bot) Start() error {
 		return err
 	}
 	for update := range updates {
-		if update.Message == nil { // ignore any non-Message Updates
+		// ignore any non-Message Updates
+		if update.Message == nil {
 			continue
 		}
-
+		// command handler
 		if update.Message.IsCommand() {
 			b.handleCommand(update.Message)
 			continue
 		}
-
+		// message handler
 		b.handleMessage(update.Message)
 	}
 	return nil
