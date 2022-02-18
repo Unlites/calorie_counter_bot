@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 8.0.28, for Linux (x86_64)
 --
--- Host: localhost    Database: callorie_counter
+-- Host: 127.0.0.1    Database: callorie_counter
 -- ------------------------------------------------------
 -- Server version	8.0.28-0ubuntu0.20.04.3
 
@@ -33,6 +33,7 @@ CREATE TABLE `current_callories` (
 
 LOCK TABLES `current_callories` WRITE;
 /*!40000 ALTER TABLE `current_callories` DISABLE KEYS */;
+INSERT INTO `current_callories` VALUES (0);
 /*!40000 ALTER TABLE `current_callories` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -48,7 +49,7 @@ CREATE TABLE `food` (
   `product_name` varchar(100) DEFAULT NULL,
   `callories` int DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -57,7 +58,7 @@ CREATE TABLE `food` (
 
 LOCK TABLES `food` WRITE;
 /*!40000 ALTER TABLE `food` DISABLE KEYS */;
-INSERT INTO `food` VALUES (1,'яичница жаренная',152),(2,'чай',2),(3,'хлебец',14),(4,'яичница жаренная с наггетсами',248),(5,'яичница жаренная с наггетсами и сыром',280),(6,'макароны с наггетсами',274);
+INSERT INTO `food` VALUES (1,'яичница жаренная',152),(2,'чай',2),(3,'хлебец',14),(4,'яичница жаренная с наггетсами',248),(5,'яичница жаренная с наггетсами и сыром',280),(6,'макароны с наггетсами',274),(7,'гречневые хлопья с наггетсами',180),(8,'гречка с наггетсами',247),(9,'наггетсы 3шт',144),(10,'наггетсы 2шт',96),(11,'кусок пиццы',200),(12,'рис с наггетсами',189),(13,'паста',125),(14,'макароны со свининой',185),(15,'гречка',37),(16,'гречневые хлопья',29),(17,'рис',39),(18,'чебупицца',125),(20,'шоколадка горькая',27),(21,'печенька на фруктозе',50),(22,'пол кусочка пиццы',100),(23,'булочка с корицей',233),(24,'конфета с нугой и карамелью',51),(25,'пончик с сахарной пудрой',255),(26,'сарделька',220),(28,'молочный шоколад',45),(29,'отчет за денб',0),(30,'куриные катлеты',150),(31,'конфета',50),(32,'булочка',70),(33,'шоколад горький',27),(34,'макароны',40),(35,'мюсли батончик',100);
 /*!40000 ALTER TABLE `food` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -73,7 +74,7 @@ CREATE TABLE `lunchs` (
   `date` datetime DEFAULT NULL,
   `callories` int DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -82,8 +83,34 @@ CREATE TABLE `lunchs` (
 
 LOCK TABLES `lunchs` WRITE;
 /*!40000 ALTER TABLE `lunchs` DISABLE KEYS */;
-INSERT INTO `lunchs` VALUES (1,'2022-02-08 12:49:34',72);
+INSERT INTO `lunchs` VALUES (5,'2022-02-14 17:30:48',16),(6,'2022-02-14 20:19:15',940),(7,'2022-02-14 20:23:16',51),(8,'2022-02-15 06:29:25',248),(9,'2022-02-15 10:42:29',286),(10,'2022-02-15 15:21:14',413),(11,'2022-02-15 21:51:38',350),(12,'2022-02-16 11:38:54',552),(13,'2022-02-16 18:37:16',352),(14,'2022-02-16 20:13:38',326),(15,'2022-02-17 08:38:47',359),(17,'2022-02-18 17:34:16',409),(18,'2022-02-18 17:37:23',192),(19,'2022-02-18 17:38:15',100);
 /*!40000 ALTER TABLE `lunchs` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `users_status`
+--
+
+DROP TABLE IF EXISTS `users_status`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `users_status` (
+  `user_id` varchar(100) NOT NULL,
+  `waiting` varchar(100) NOT NULL,
+  `product_name` varchar(100) DEFAULT NULL,
+  `callories` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `users_status`
+--
+
+LOCK TABLES `users_status` WRITE;
+/*!40000 ALTER TABLE `users_status` DISABLE KEYS */;
+INSERT INTO `users_status` VALUES ('1459568357','waiting_product_name','',''),('1568063222','no_waiting','','');
+/*!40000 ALTER TABLE `users_status` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -95,4 +122,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-02-08 17:56:56
+-- Dump completed on 2022-02-18 17:58:49

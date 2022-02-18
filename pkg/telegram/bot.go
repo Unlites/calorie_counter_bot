@@ -18,7 +18,7 @@ type MessageComponents struct {
 }
 
 func NewMessageComponents(Waiting string, ProductName string, Callories string) *MessageComponents {
-	return &MessageComponents{Waiting: "no_waiting", ProductName: ProductName, Callories: Callories}
+	return &MessageComponents{Waiting: Waiting, ProductName: ProductName, Callories: Callories}
 }
 
 func NewBot(bot *tgbotapi.BotAPI, mc *MessageComponents, db *db.Db) *Bot {
