@@ -1,6 +1,8 @@
 package telegram
 
 import (
+	"log"
+
 	"github.com/Unlites/callorie_counter/pkg/db"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 )
@@ -31,6 +33,7 @@ func (b *Bot) Start() error {
 
 	updates, err := b.bot.GetUpdatesChan(u)
 	if err != nil {
+		log.Fatal(err)
 		return err
 	}
 	for update := range updates {
