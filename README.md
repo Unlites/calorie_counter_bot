@@ -26,5 +26,5 @@ make run start-container
 ## How it works
 
 The logic is built around the `waiting` parameter, which initially has the value `"no-waiting"`.</br>
-Having received a ask from the user, which the bot knows, it will change the `waiting` value to the one necessary for the corresponding ask.</br>
+Having received a ask from the user, which the bot knows, it will change the `waiting` value to the one necessary for the corresponding ask and start the required processing.</br>
 After complete ask or the user violates the execution conditions (for example, writes digits instead of the expected text), the `waiting` value returns to `"no-waiting"`
