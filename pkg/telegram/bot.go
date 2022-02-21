@@ -3,6 +3,7 @@ package telegram
 import (
 	"log"
 
+	"github.com/Unlites/callorie_counter/pkg/config"
 	"github.com/Unlites/callorie_counter/pkg/db"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 )
@@ -11,6 +12,7 @@ type Bot struct {
 	bot *tgbotapi.BotAPI
 	mc  *MessageComponents
 	db  *db.Db
+	msg config.Messages
 }
 
 type MessageComponents struct {
@@ -23,8 +25,8 @@ func NewMessageComponents(waiting string, productName string, callories string) 
 	return &MessageComponents{waiting: waiting, productName: productName, callories: callories}
 }
 
-func NewBot(bot *tgbotapi.BotAPI, mc *MessageComponents, db *db.Db) *Bot {
-	return &Bot{bot: bot, mc: mc, db: db}
+func NewBot(bot *tgbotapi.BotAPI, mc *MessageComponents, db *db.Db, msg config.Messages) *Bot {
+	return &Bot{bot: bot, mc: mc, db: db, msg: msg}
 }
 
 func (b *Bot) Start() error {

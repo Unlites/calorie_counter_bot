@@ -25,7 +25,7 @@ func main() {
 
 	msgComponents := telegram.NewMessageComponents("no_waiting", "", "")
 
-	bot := telegram.NewBot(botApi, msgComponents, database)
+	bot := telegram.NewBot(botApi, msgComponents, database, cfg.Messages)
 	if err := bot.Start(); err != nil {
 		log.Fatal(err)
 	}

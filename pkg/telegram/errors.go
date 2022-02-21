@@ -11,23 +11,23 @@ func (b *Bot) handleError(message *tgbotapi.Message, typeError string, err error
 	log.Print(err)
 	switch typeError {
 	case "failed_start":
-		b.SendMessage(message, "Не удалось запустить бота, попробуй позже")
+		b.SendMessage(message, b.msg.Errors.FailedStart)
 	case "user_param_error":
-		b.SendMessage(message, "Не удалось обработать сообщение, попробуй позже.")
+		b.SendMessage(message, b.msg.Errors.UserParamError)
 	case "insert_food_error":
-		b.SendMessage(message, "Не удалось добавить продукт в базу. Попробуй в другой раз.")
+		b.SendMessage(message, b.msg.Errors.InsertFoodError)
 	case "count_callories_error":
-		b.SendMessage(message, "Не удалось посчитать каллории этого приема пищи. Попробуй позже.")
+		b.SendMessage(message, b.msg.Errors.CountCalloriesError)
 	case "report_error":
 		if strings.Contains(err.Error(), "NULL") {
-			b.SendMessage(message, "Не было приемов пищи!")
+			b.SendMessage(message, b.msg.Errors.ReportErrorNotFound)
 			return
 		}
-		b.SendMessage(message, "Не удалось сформировать отчет. Попробуй позже.")
+		b.SendMessage(message, b.msg.Errors.ReportErrorFailed)
 	case "find_callories_error":
-		b.SendMessage(message, "Не удалось найти калорийность продукта в базе. Попробуй позже.")
+		b.SendMessage(message, b.msg.Errors.FindCalloriesError)
 	case "find_product_name_error":
-		b.SendMessage(message, "Не удалось выполнить поиск продукта в базе. Попробуй позже.")
+		b.SendMessage(message, b.msg.Errors.FindProductNameError)
 	}
 
 }

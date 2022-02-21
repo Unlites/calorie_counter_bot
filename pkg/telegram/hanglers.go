@@ -12,7 +12,7 @@ func (b *Bot) handleMessage(message *tgbotapi.Message) {
 
 	// Check type of message - it must be string only
 	if reflect.TypeOf(message.Text).Kind() != reflect.String {
-		b.SendMessage(message, "Я понимаю только текст")
+		b.SendMessage(message, b.msg.Responses.TextOnly)
 		b.reset(message)
 		return
 	}
@@ -60,7 +60,7 @@ func (b *Bot) handleMessage(message *tgbotapi.Message) {
 		if result := b.WriteLunchStartWaiting(message); result != "ok" {
 			// If product not in DB, set waiting for start operation to add it to DB
 			if result == "unknown_product" {
-				b.SendMessage(message, "Сколько в этом продукте киллокаллорий?")
+				b.SendMessage(message, b.msg.Responses.HowMuchCallories)
 				if err := b.db.SetWaiting(message.Chat.ID, "waiting_composition_new_product_callorie"); err != nil {
 					b.handleError(message, "user_param_error", err)
 					return
@@ -80,7 +80,7 @@ func (b *Bot) handleMessage(message *tgbotapi.Message) {
 		if result := b.WriteLunchRestWaiting(message); result != "ok" {
 			// If product not in DB, set waiting for start operation to add it to DB
 			if result == "unknown_product" {
-				b.SendMessage(message, "Сколько в этом продукте киллокалорий?")
+				b.SendMessage(message, b.msg.Responses.HowMuchCallories)
 				if err := b.db.SetWaiting(message.Chat.ID, "waiting_composition_new_product_callorie"); err != nil {
 					b.handleError(message, "user_param_error", err)
 					return
@@ -161,7 +161,7 @@ func (b *Bot) callAsk(message *tgbotapi.Message) error {
 		return nil
 	}
 
-	b.SendMessage(message, "Не понял. Можешь запустить команду /help, чтобы узнать, что я умею.")
+	b.SendMessage(message, b.msg.Responses.UnknownAsk)
 	b.reset(message)
 	return nil
 }
@@ -179,14 +179,14 @@ func (b *Bot) handleCommand(message *tgbotapi.Message) {
 				b.handleError(message, "failed_start", err)
 				return
 			}
-			b.SendMessage(message, "Добро пожаловать! Запусти команду /help, чтобы узнать, что я умею.")
+			b.SendMessage(message, b.msg.Responses.Welcome)
 			return
 		}
-		b.SendMessage(message, "Привет! Запусти команду /help, чтобы узнать, что я умею.")
+		b.SendMessage(message, b.msg.Responses.Start)
 	case "help":
 		b.ShowAsks(message)
 	default:
-		b.SendMessage(message, "Неизвестная команда.")
+		b.SendMessage(message, b.msg.Responses.UnknownCommand)
 	}
 }
 
