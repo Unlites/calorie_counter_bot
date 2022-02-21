@@ -67,12 +67,8 @@ func (b *Bot) WriteLunchNoWaiting(message *tgbotapi.Message) {
 
 // Getting productName, find its callories in Db, increase current lunch callories or return with search result
 func (b *Bot) WriteLunchStartWaiting(message *tgbotapi.Message) string {
-	if CheckText(message.Text) {
-		b.SendMessage(message, b.msg.Responses.InvalidText)
-		return "invalid"
-	}
 	result := b.FindCallories(message)
-	if result == "ok" {
+	if result != "ok" {
 		return result
 	}
 	err := b.db.IncreaseCurrentCallories(message.Chat.ID, b.mc.callories)
@@ -139,7 +135,7 @@ func (b *Bot) ShowProductCalloriesNameWaiting(message *tgbotapi.Message) string 
 
 func (b *Bot) DayReport(message *tgbotapi.Message) {
 	sum, avg, err := b.db.SelectDayCallories(message.Chat.ID)
-	if err == nil {
+	if err != nil {
 		b.handleError(message, "report_error", err)
 		return
 	}
@@ -149,7 +145,7 @@ func (b *Bot) DayReport(message *tgbotapi.Message) {
 
 func (b *Bot) WeekReport(message *tgbotapi.Message) {
 	sum, avg, err := b.db.SelectWeekCallories(message.Chat.ID)
-	if err == nil {
+	if err != nil {
 		b.handleError(message, "report_error", err)
 		return
 	}
@@ -159,7 +155,7 @@ func (b *Bot) WeekReport(message *tgbotapi.Message) {
 
 func (b *Bot) MonthReport(message *tgbotapi.Message) {
 	sum, avg, err := b.db.SelectMonthCallories(message.Chat.ID)
-	if err == nil {
+	if err != nil {
 		b.handleError(message, "report_error", err)
 		return
 	}
