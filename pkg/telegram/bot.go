@@ -39,16 +39,16 @@ func (b *Bot) Start() error {
 		return err
 	}
 	for update := range updates {
-		// ignore any non-Message Updates
+		// Ignore any non-Message Updates
 		if update.Message == nil {
 			continue
 		}
-		// command handler
+		// Command handler
 		if update.Message.IsCommand() {
 			b.handleCommand(update.Message)
 			continue
 		}
-		// message handler
+		// Message handler
 		b.handleMessage(update.Message)
 	}
 	return nil

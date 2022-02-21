@@ -23,21 +23,21 @@ func (b *Bot) AddFoodProductNameWaiting(message *tgbotapi.Message) string {
 		return "error"
 	}
 	if CheckText(message.Text) {
-		b.SendMessage(message, "Текст должен содержать только назавание одного продукта или блюда, без знаков препинания или спецсимволов.")
+		b.SendMessage(message, b.msg.Responses.InvalidText)
 		return "invalid"
 	}
 	if b.CheckExists(message) != "unknown_product" {
-		b.SendMessage(message, "Такой продукт уже есть в базе!")
+		b.SendMessage(message, b.msg.Responses.ProductExists)
 		return "invalid"
 	}
-	b.SendMessage(message, "Сколько в этом продукте киллокаллорий?")
+	b.SendMessage(message, b.msg.HowMuchCallories)
 	return "ok"
 }
 
 // Setting incoming callories and added product to DB
 func (b *Bot) AddFoodCallorieWaiting(message *tgbotapi.Message) string {
 	if CheckDigits(message.Text) {
-		b.SendMessage(message, "Текст должен содержать только цифру с количеством киллокаллорий в продукте или блюде.")
+		b.SendMessage(message, b.msg.Responses.InvalidText)
 		return "invalid"
 	}
 	err := b.db.SetCallories(message.Chat.ID, message.Text)
@@ -55,20 +55,20 @@ func (b *Bot) AddFoodCallorieWaiting(message *tgbotapi.Message) string {
 		return "error"
 	}
 
-	b.SendMessage(message, "Добавил продукт в базу!")
+	b.SendMessage(message, b.msg.Responses.ProductAdded)
 	return "ok"
 
 }
 
 // Starting write lunch handle, asking for lunch composition
 func (b *Bot) WriteLunchNoWaiting(message *tgbotapi.Message) {
-	b.SendMessage(message, "Окей, давай уточним состав приема пищи. Перечисляй продукты или блюда из базы по одному.")
+	b.SendMessage(message, b.msg.Responses.StartLunch)
 }
 
 // Getting productName, find its callories in Db, increase current lunch callories or return with search result
 func (b *Bot) WriteLunchStartWaiting(message *tgbotapi.Message) string {
 	if CheckText(message.Text) {
-		b.SendMessage(message, "Текст должен содержать только назавание одного продукта или блюда, без знаков препинания или спецсимволов.")
+		b.SendMessage(message, b.msg.Responses.InvalidText)
 		return "invalid"
 	}
 	result := b.FindCallories(message)
@@ -80,7 +80,7 @@ func (b *Bot) WriteLunchStartWaiting(message *tgbotapi.Message) string {
 		b.handleError(message, "count_callories_error", err)
 		return "error"
 	}
-	b.SendMessage(message, fmt.Sprintf("Прибавил продукт %s с %s ккал! Есть еще продукты? Пиши его название, если да, либо \"нет\", если таковых не осталось.", b.mc.productName, b.mc.callories))
+	b.SendMessage(message, fmt.Sprintf(b.msg.Responses.RestLunch, b.mc.productName, b.mc.callories))
 	return "ok"
 }
 
@@ -92,7 +92,7 @@ func (b *Bot) WriteLunchRestWaiting(message *tgbotapi.Message) string {
 			b.handleError(message, "count_callories_error", err)
 			return "error"
 		}
-		b.SendMessage(message, fmt.Sprintf("Прием пищи зафиксирован! Ты потребила %s киллокаллорий", countedCallories))
+		b.SendMessage(message, fmt.Sprintf(b.msg.Responses.StopLunch, countedCallories))
 		return "stop"
 	}
 	if result := b.FindCallories(message); result != "ok" {
@@ -102,7 +102,7 @@ func (b *Bot) WriteLunchRestWaiting(message *tgbotapi.Message) string {
 		b.handleError(message, "count_callories_error", err)
 		return "error"
 	}
-	b.SendMessage(message, fmt.Sprintf("Прибавил продукт %s с %s килокаллорий! Есть еще продукты? Пиши его название, если да, либо \"нет\", если таковых не осталось.", b.mc.productName, b.mc.callories))
+	b.SendMessage(message, fmt.Sprintf(b.msg.Responses.RestLunch, b.mc.productName, b.mc.callories))
 	return "ok"
 }
 
@@ -113,25 +113,25 @@ func (b *Bot) WriteLunchUnknownProductWaiting(message *tgbotapi.Message) string 
 		b.handleError(message, "count_callories_error", err)
 		return "error"
 	}
-	b.SendMessage(message, fmt.Sprintf("Прибавил %s продукт с %s килокаллорий! Есть еще продукты? Пиши его название, если да, либо \"нет\", если таковых не осталось.", b.mc.productName, b.mc.callories))
+	b.SendMessage(message, fmt.Sprintf(b.msg.Responses.RestLunch, b.mc.productName, b.mc.callories))
 	return "ok"
 }
 
 // Method for start operation to show callories of existing product in DB, asking product name
 func (b *Bot) ShowProductCalloriesNoWaiting(message *tgbotapi.Message) {
-	b.SendMessage(message, "О каком продукте идет речь?")
+	b.SendMessage(message, b.msg.Responses.WhatProduct)
 }
 
 // Check product in DB, if exists - send its callories.
 func (b *Bot) ShowProductCalloriesNameWaiting(message *tgbotapi.Message) string {
 	if result := b.FindCallories(message); result != "ok" {
 		if result == "unknown_product" {
-			b.SendMessage(message, "Такого продукта нет в базе!")
+			b.SendMessage(message, b.msg.Responses.ProductNotExists)
 			return "invalid"
 		}
 		return "error"
 	}
-	b.SendMessage(message, fmt.Sprintf("В продукте %s %s килокалорий", b.mc.productName, b.mc.callories))
+	b.SendMessage(message, fmt.Sprintf(b.msg.Responses.ProductCallories, b.mc.productName, b.mc.callories))
 	return "ok"
 }
 
@@ -143,7 +143,7 @@ func (b *Bot) DayReport(message *tgbotapi.Message) {
 		b.handleError(message, "report_error", err)
 		return
 	}
-	b.SendMessage(message, fmt.Sprintf("За этот день ты потребила %s калорий. В среднем %s за прием пищи.", sum, avg))
+	b.SendMessage(message, fmt.Sprintf(b.msg.Responses.DayReport, sum, avg))
 	return
 }
 
@@ -153,7 +153,7 @@ func (b *Bot) WeekReport(message *tgbotapi.Message) {
 		b.handleError(message, "report_error", err)
 		return
 	}
-	b.SendMessage(message, fmt.Sprintf("За прошедшую неделю ты потребила %s калорий. В среднем %s за прием пищи.", sum, avg))
+	b.SendMessage(message, fmt.Sprintf(b.msg.Responses.WeekReport, sum, avg))
 	return
 }
 
@@ -163,20 +163,20 @@ func (b *Bot) MonthReport(message *tgbotapi.Message) {
 		b.handleError(message, "report_error", err)
 		return
 	}
-	b.SendMessage(message, fmt.Sprintf("За прошедший месяц ты потребила %s калорий. В среднем %s за прием пищи.", sum, avg))
+	b.SendMessage(message, fmt.Sprintf(b.msg.Responses.MonthReport, sum, avg))
 	return
 }
 
 // Show that we can do
 func (b *Bot) ShowAsks(message *tgbotapi.Message) {
-	b.SendMessage(message, "Список команд:\nДобавь продукт в базу\nЗафиксируй прием пищи\nСколько калорий в продукте\nОтчет за день\nОтчет за неделю\nОтчет за месяц")
+	b.SendMessage(message, b.msg.Responses.AskList)
 }
 
 // Using methods
 
 func (b *Bot) FindCallories(message *tgbotapi.Message) string {
 	if CheckText(message.Text) {
-		b.SendMessage(message, "Текст должен содержать только назавание одного продукта или блюда, без знаков препинания или спецсимволов.")
+		b.SendMessage(message, b.msg.Responses.InvalidText)
 		return "invalid"
 	}
 	err := b.db.SetProductName(message.Chat.ID, message.Text)
