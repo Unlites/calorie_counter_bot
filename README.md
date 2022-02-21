@@ -3,7 +3,6 @@ Telegram Bot for counting calories of your lunchs.
 
 ## Installing
 
-Service can be start with run Makefile instruction, which run docker-container.</br>
 For working you need to have mysql-server on your localhost and create `.env` file in root of project with 3 variables:
 
 ```sh
@@ -17,6 +16,8 @@ Run next command from project path to install DB:
 mysql -uroot -h127.0.0.1 -p callorie_counter_bot < callorie_counter_bot.sql
 ```
 ## Starting
+
+Service can be start with run Makefile instruction, which run docker-container.</br>
 
 ```sh
 make run build-image
